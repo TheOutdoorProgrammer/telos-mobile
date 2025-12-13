@@ -1,0 +1,70 @@
+name: Publish App
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build iOS app
+        run: eas build --platform ios --profile production --non-interactive --no-wait
+        continue-on-error: true
+
+      - name: Build Android app
+        run: eas build --platform android --profile production --non-interactive --no-wait
+
+      - name: Wait for builds to complete
+        run: |
+          echo "Builds have been submitted to EAS Build service"
+          echo "Monitor build progress at: https://expo.dev/accounts/${{ github.repository_owner }}/projects/telos/builds"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
+          body: |
+            ## Telos Mobile Release ${{ github.ref_name }}
+
+            A new version of Telos Mobile has been published!
+
+            ### Build Status
+
+            Builds have been submitted to Expo Application Services (EAS).
+            You can monitor the build progress and download artifacts from:
+            https://expo.dev/accounts/${{ github.repository_owner }}/projects/telos/builds
+
+            ### Installation
+
+            Once builds are complete:
+            - **iOS**: Download from the App Store (if submitted) or install via TestFlight
+            - **Android**: Download from Google Play Store (if submitted) or install the APK directly from EAS
+
+            ### What's Changed
+
+            ${{ github.event.head_commit.message }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

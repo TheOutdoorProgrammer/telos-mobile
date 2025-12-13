@@ -34,3 +34,9 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# Publishing credentials
+playstore-service-account.json
+*.mobileprovision
+google-services.json
+GoogleService-Info.plist
