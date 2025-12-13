@@ -4,6 +4,9 @@
 
 Telos Mobile brings the powerful [Telos Framework](https://github.com/danielmiessler/telos) by Daniel Miessler to iOS and Android. Build deep, structured context about yourself or your organization through natural conversation with Claude AI, with full control over every change.
 
+![File List](.github/screenshots/file-list.png)
+![Approval Flow](.github/screenshots/approval-flow.png)
+
 ## What is Telos?
 
 Telos is a framework for creating "deep context" - a comprehensive understanding of who you are, what you're trying to achieve, and how you're going to get there. It uses structured markdown files that connect:
@@ -22,25 +25,39 @@ This creates complete transparency, mapping all your work back to the fundamenta
 
 ## Key Features
 
-✅ **Intelligent Conversations**
+### ✅ Intelligent Conversations
+
+![Chat Interface](.github/screenshots/chat-interface.png)
+
 - Natural chat interface powered by Claude AI
 - Context-aware suggestions based on your Telos file
 - Specialized prompts for different aspects of your context
+- Real-time streaming responses
 
-✅ **Safe Editing**
+### ✅ Safe Editing with Approval Flow
+
+![Approval Flow](.github/screenshots/approval-flow.png)
+
 - Approve or reject every proposed change
 - Clear diff view shows exactly what will change
 - Edit suggestions before accepting them
+- Never lose control of your context
 
-✅ **Complete Telos Support**
-- Full template for all Telos sections
-- Guided onboarding for new users
-- Quick actions for common updates
+### ✅ Quick Actions & Specialized Prompts
 
-✅ **Mobile-First Design**
+![Quick Actions](.github/screenshots/quick-actions.png)
+
+- 18+ specialized prompts organized by category
+- **Quick Actions**: Journal entries, section updates
+- **Analysis**: Check blind spots, analyze challenges, find negative thinking
+- **Reflection**: Year in review, life outlook, encouragement
+- **Planning**: Career plans, threat models, progress visualization
+
+### ✅ Mobile-First Design
 - Works offline (except AI features)
 - Fast, native performance
 - Beautiful Dracula theme
+- Secure API key storage
 
 ## Getting Started
 
@@ -66,6 +83,8 @@ npm run android # Android
 
 ### Setup
 
+![Settings Screen](.github/screenshots/settings.png)
+
 1. **Get a Claude API Key**
    - Sign up at [console.anthropic.com](https://console.anthropic.com)
    - Create an API key
@@ -74,7 +93,7 @@ npm run android # Android
 2. **Configure the App**
    - Open Settings in the app
    - Enter your Claude API key
-   - Select your preferred model
+   - Select your preferred model (Opus, Sonnet, or Haiku)
    - Test the connection
 
 3. **Create Your First Telos File**
@@ -87,6 +106,7 @@ npm run android # Android
    - Ask Claude to help you define your mission
    - Review and approve suggestions
    - Build your context iteratively
+
 
 ## Quick Actions
 
