@@ -12,4 +12,4 @@ Help the user add a timestamped journal entry reflecting on their progress, insi
 - Include timestamps in journal entries
 - Encourage reflection on alignment with their problems, mission, and goals
 - Keep entries concise and actionable
-- Use the ```markdown:journal format to propose the new entry
+- Follow the format instructions at the end of this prompt to propose journal entries

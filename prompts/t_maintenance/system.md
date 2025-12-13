@@ -13,4 +13,4 @@ Help the user make updates to any section of their TCF based on life changes, ne
 - Ensure changes maintain alignment with their problems and mission
 - Respect the weighted priority system
 - Challenge assumptions if something seems misaligned
-- Use the ```markdown:section_name format to propose changes
+- Follow the format instructions at the end of this prompt to propose changes

@@ -201,9 +201,46 @@ export async function sendMessage(
 }
 
 /**
- * Parse proposed changes from Claude's response
+ * Parse full document from Claude's response
+ * Looks for <telos_document>...</telos_document> XML tags
+ * Returns the full document content if found, null otherwise
+ */
+export function parseFullDocument(responseText: string): string | null {
+  // Look for XML tags containing the full document
+  const documentRegex = /<telos_document>\s*([\s\S]*?)\s*<\/telos_document>/;
+  const match = responseText.match(documentRegex);
+
+  if (match && match[1] && match[1].trim().length > 0) {
+    return match[1].trim();
+  }
+
+  return null;
+}
+
+/**
+ * Extract conversational summary from Claude's response
+ * Returns everything before the <telos_document> tag
+ * If no document tag found, returns the entire response
+ */
+export function extractSummary(responseText: string): string {
+  const documentRegex = /<telos_document>/;
+  const parts = responseText.split(documentRegex);
+
+  if (parts && parts[0]) {
+    return parts[0].trim();
+  }
+
+  // If no document tag found, return entire response
+  return responseText.trim();
+}
+
+/**
+ * Parse proposed changes from Claude's response (LEGACY FORMAT)
  * Looks for markdown code blocks with special markers
  * Returns ALL proposed changes found in the response
+ *
+ * @deprecated This is for backwards compatibility with old format.
+ * New messages should use parseFullDocument() instead.
  */
 export function parseProposedChanges(responseText: string): ProposedChange[] {
   const changes: ProposedChange[] = [];

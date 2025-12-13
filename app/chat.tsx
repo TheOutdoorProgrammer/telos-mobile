@@ -9,7 +9,7 @@ import { useClaudeChat } from '../hooks/useClaudeChat';
 import MessageList from '../components/chat/MessageList';
 import ChatInput from '../components/chat/ChatInput';
 import QuickActions from '../components/chat/QuickActions';
-import { parseProposedChanges, applySectionChanges } from '../services/claudeService';
+import { parseProposedChanges, applySectionChanges, parseFullDocument, extractSummary } from '../services/claudeService';
 import { generateDiff } from '../utils/diffGenerator';
 
 export default function Chat() {
@@ -73,31 +73,62 @@ export default function Chat() {
       // Result now contains { response, messageId }
       const { response, messageId } = result;
 
-      // Check if response contains proposed changes
-      const proposedChanges = parseProposedChanges(response);
-      if (proposedChanges.length > 0 && activeFile) {
-        console.log(`Found ${proposedChanges.length} proposed change(s)`);
+      // Try new format first (full document with XML tags)
+      const fullDocument = parseFullDocument(response);
 
-        // Apply all section changes to the original content
-        const newContent = applySectionChanges(activeFile.content, proposedChanges);
+      if (fullDocument && activeFile) {
+        console.log('Found full document in new format');
 
-        // Generate diff showing all changes
-        const diff = generateDiff(activeFile.content, newContent);
+        // Extract summary for display in chat
+        const summary = extractSummary(response);
+
+        // Update the message to show only the summary
+        updateMessage(messageId, { content: summary });
+
+        // Generate diff showing line-by-line changes
+        const diff = generateDiff(activeFile.content, fullDocument);
 
         const proposalId = `proposal_${Date.now()}`;
 
-        // Store the proposal (don't navigate yet - user will click button to review)
+        // Store the proposal with the full document
         setProposal({
           id: proposalId,
           originalContent: activeFile.content,
-          proposedContent: newContent,
+          proposedContent: fullDocument,
           diff,
           timestamp: new Date(),
         });
 
-        // Update the assistant message with the proposal ID
+        // Update the message with the proposal ID so "Review Changes" button appears
         console.log(`Updating message ${messageId} with proposalId ${proposalId}`);
         updateMessage(messageId, { proposalId });
+      } else {
+        // Fall back to old format for backwards compatibility
+        const proposedChanges = parseProposedChanges(response);
+        if (proposedChanges.length > 0 && activeFile) {
+          console.log(`Found ${proposedChanges.length} proposed change(s) in legacy format`);
+
+          // Apply all section changes to the original content
+          const newContent = applySectionChanges(activeFile.content, proposedChanges);
+
+          // Generate diff showing all changes
+          const diff = generateDiff(activeFile.content, newContent);
+
+          const proposalId = `proposal_${Date.now()}`;
+
+          // Store the proposal (don't navigate yet - user will click button to review)
+          setProposal({
+            id: proposalId,
+            originalContent: activeFile.content,
+            proposedContent: newContent,
+            diff,
+            timestamp: new Date(),
+          });
+
+          // Update the assistant message with the proposal ID
+          console.log(`Updating message ${messageId} with proposalId ${proposalId}`);
+          updateMessage(messageId, { proposalId });
+        }
       }
     } catch (err) {
       console.error('Chat error:', err);

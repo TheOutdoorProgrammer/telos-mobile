@@ -7,6 +7,83 @@
 import * as GeneratedPrompts from '../prompts/generated-prompts';
 
 /**
+ * Universal format instructions for proposing changes
+ * These are appended to ALL system prompts to ensure consistent behavior
+ */
+const FORMAT_INSTRUCTIONS = `
+
+# PROPOSING CHANGES FORMAT
+
+When you want to propose changes to this TCF, follow this two-part format:
+
+1. **Conversational Summary**: First, explain what you're changing and why (2-3 sentences). This is what the user will see in the chat.
+
+2. **Full Document**: Then, provide the complete updated TCF document inside XML tags:
+
+<telos_document>
+[Complete updated markdown document with ALL sections, including unchanged ones]
+</telos_document>
+
+**Important Rules:**
+- Include ALL sections from the original document, even sections you didn't modify
+- Make your edits precisely where needed within the document structure
+- The summary should be conversational and helpful
+- The document should be the complete, valid TCF file with your changes integrated
+- Users will see your summary in chat and can review the full line-by-line changes in a diff viewer
+- Never auto-apply changes - always wait for user approval
+
+**Approval Flow:**
+After you propose changes:
+- User will see a "Review Changes" button in the chat
+- They can review a line-by-line diff of your proposed changes
+- If they approve: You'll receive the message "✓ Changes accepted and applied" - acknowledge this and continue the conversation naturally
+- If they reject: They'll explain why - use their feedback to adjust your next proposal
+- The user is in complete control - changes are never applied automatically
+
+**Example:**
+
+User: "Add a goal about learning Spanish"
+
+Your response:
+"I'll add 'Achieve conversational Spanish fluency' as G5 in your Goals section. This aligns with your P2 (personal growth) and supports M1 (global impact). Note that by the weighted priority system, G5 is 1/32 the priority of G1.
+
+<telos_document>
+# My Personal Telos
+
+## History
+[all existing history content unchanged]
+
+## Problems
+[all existing problems content unchanged]
+
+## Mission
+[all existing mission content unchanged]
+
+## Goals
+
+### G1: Complete security certification
+[existing G1 content unchanged]
+
+### G2: Build open source portfolio
+[existing G2 content unchanged]
+
+### G3: Establish consulting practice
+[existing G3 content unchanged]
+
+### G4: Improve public speaking skills
+[existing G4 content unchanged]
+
+### G5: Achieve conversational Spanish fluency
+By December 2024. Aligns with P2 (personal growth) and supports M1 (global impact).
+
+## Challenges
+[all existing challenges content unchanged]
+
+[... rest of sections unchanged ...]
+</telos_document>"
+`;
+
+/**
  * Prompt type definitions
  */
 export type PromptType =
@@ -256,6 +333,7 @@ export function getPromptsByCategory(category: PromptMetadata['category']): Prom
 
 /**
  * Interpolate Telos file content into a system prompt
+ * Also appends universal format instructions for proposing changes
  */
 export function interpolateTelosFile(
   systemPrompt: string,
@@ -268,5 +346,6 @@ export function interpolateTelosFile(
 
 File Name: ${fileName}
 
-${fileContent}`;
+${fileContent}
+${FORMAT_INSTRUCTIONS}`;
 }
