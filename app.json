@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "Telos",
+    "slug": "telos",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#282a36"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.theoutdoorprogrammer.telos"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#282a36"
+      },
+      "package": "com.theoutdoorprogrammer.telos"
+    },
+    "scheme": "telos",
+    "plugins": [
+      "expo-router"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "a84606b6-be04-4ec9-b891-c64426060f50"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/a84606b6-be04-4ec9-b891-c64426060f50"
+    }
+  }
+}
